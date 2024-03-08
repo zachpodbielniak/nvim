@@ -39,3 +39,12 @@ lspconfig.clangd.setup({
   cmd = {"clangd"},
   single_file_support = true
 })
+
+-- R 
+lspconfig.r_language_server.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = {"r", "rmd"},
+  cmd = {"R", "--slave", "-e", "languageserver::run()"},
+  single_file_support = true
+})
