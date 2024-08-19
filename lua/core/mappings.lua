@@ -9,10 +9,14 @@ M.general = {
     ["<C-e>"] = { "<End>", "End of line" },
 
     -- navigate within insert mode
-    ["<C-h>"] = { "<Left>", "Move left" },
-    ["<C-l>"] = { "<Right>", "Move right" },
-    ["<C-j>"] = { "<Down>", "Move down" },
-    ["<C-k>"] = { "<Up>", "Move up" },
+    -- ["<C-h>"] = { "<Left>", "Move left" },
+    -- ["<C-l>"] = { "<Right>", "Move right" },
+    -- ["<C-j>"] = { "<Down>", "Move down" },
+    -- ["<C-k>"] = { "<Up>", "Move up" },
+    ["<C-h>"] = { "<cmd> TmuxNavigateLeft<CR>", "Move left" },
+    ["<C-l>"] = { "<cmd> TmuxNavigateRight<CR>", "Move right" },
+    ["<C-j>"] = { "<cmd> TmuxNavigateDown<CR>", "Move down" },
+    ["<C-k>"] = { "<cmd> TmuxNavigateUp<CR>", "Move up" },
   },
 
   n = {
