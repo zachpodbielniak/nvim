@@ -48,3 +48,12 @@ lspconfig.r_language_server.setup({
   cmd = {"R", "--slave", "-e", "languageserver::run()"},
   single_file_support = true
 })
+
+-- Makefiles
+lspconfig.autotools_ls.setup({
+    on_attach = on_attach,
+    capabilities = capabilities,
+    filetypes = {"config", "automake", "make", "Makefile", "configure.ac", "Makefile.am", "*.mk"},
+    cmd = {"autotools-language-server"},
+    single_file_support = true
+})
