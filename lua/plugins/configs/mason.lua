@@ -7,7 +7,8 @@ local options = {
         "shfmt",
         "flake8",
         "markdownlint",
-        "yamllint"
+        "yamllint",
+        "systemdlint"
     }, -- not an option from mason.nvim
 
   PATH = "skip",
