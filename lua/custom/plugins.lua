@@ -74,7 +74,8 @@ local plugins = {
                                 personal = "~/Documents/notes/personal",
                                 work = "~/Documents/notes/work"
                             },
-                            default_workspace = "personal"
+                            default_workspace = "personal",
+                            index = "00_index.norg",
                         }
                     }
                 }
