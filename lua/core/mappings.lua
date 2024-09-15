@@ -13,19 +13,23 @@ M.general = {
     -- ["<C-l>"] = { "<Right>", "Move right" },
     -- ["<C-j>"] = { "<Down>", "Move down" },
     -- ["<C-k>"] = { "<Up>", "Move up" },
-    ["<C-h>"] = { "<cmd> TmuxNavigateLeft<CR>", "Move left" },
-    ["<C-l>"] = { "<cmd> TmuxNavigateRight<CR>", "Move right" },
-    ["<C-j>"] = { "<cmd> TmuxNavigateDown<CR>", "Move down" },
-    ["<C-k>"] = { "<cmd> TmuxNavigateUp<CR>", "Move up" },
+    ["<C-h>"] = { "<Cmd>TmuxNavigateLeft<CR>", "Move left" },
+    ["<C-l>"] = { "<Cmd>TmuxNavigateRight<CR>", "Move right" },
+    ["<C-j>"] = { "<Cmd>TmuxNavigateDown<CR>", "Move down" },
+    ["<C-k>"] = { "<Cmd>TmuxNavigateUp<CR>", "Move up" },
   },
 
   n = {
     ["<Esc>"] = { "<cmd> noh <CR>", "Clear highlights" },
     -- switch between windows
-    ["<C-h>"] = { "<C-w>h", "Window left" },
-    ["<C-l>"] = { "<C-w>l", "Window right" },
-    ["<C-j>"] = { "<C-w>j", "Window down" },
-    ["<C-k>"] = { "<C-w>k", "Window up" },
+    -- ["<C-h>"] = { "<C-w>h", "Window left" },
+    -- ["<C-l>"] = { "<C-w>l", "Window right" },
+    -- ["<C-j>"] = { "<C-w>j", "Window down" },
+    -- ["<C-k>"] = { "<C-w>k", "Window up" },
+    ["<C-h>"] = { "<Cmd>TmuxNavigateLeft<CR>", "Move left" },
+    ["<C-l>"] = { "<Cmd>TmuxNavigateRight<CR>", "Move right" },
+    ["<C-j>"] = { "<Cmd>TmuxNavigateDown<CR>", "Move down" },
+    ["<C-k>"] = { "<Cmd>TmuxNavigateUp<CR>", "Move up" },
 
     -- save
     ["<C-s>"] = { "<cmd> w <CR>", "Save file" },
