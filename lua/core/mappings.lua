@@ -60,6 +60,10 @@ M.general = {
       end,
       "LSP formatting",
     },
+
+    -- Neorg Settings 
+    ["<leader>oi"] = { "<cmd>Neorg index<CR>", "Neorg Index"},
+    ["<leader>or"] = {"<cmd>Neorg return<CR>", "Neorg Return"}
   },
 
   t = {
