@@ -63,7 +63,9 @@ M.general = {
 
     -- Neorg Settings 
     ["<leader>oi"] = { "<cmd>Neorg index<CR>", "Neorg Index"},
-    ["<leader>or"] = {"<cmd>Neorg return<CR>", "Neorg Return"}
+    ["<leader>or"] = {"<cmd>Neorg return<CR>", "Neorg Return"},
+    ["<leader>om"] = {"<cmd>Neorg inject-metadata<CR>", "Neorg Inject Metadata"},
+    ["<leader>ot"] = {"<cmd>Neorg toc", "Neorg TOC"}
   },
 
   t = {

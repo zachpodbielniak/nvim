@@ -68,6 +68,11 @@ local plugins = {
                 load = {
                     ["core.defaults"] = {}, -- Loads default behavior 
                     ["core.concealer"] = {}, -- Adds pretty icons to documents
+                    ["core.summary"] = {
+                        config = {
+                            strategy = "by_path"
+                        }
+                    },
                     ["core.dirman"] = { -- Manages Neorg WorkspaceSymbol
                         config = {
                             workspaces = {
