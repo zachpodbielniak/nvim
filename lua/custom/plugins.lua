@@ -87,6 +87,10 @@ local plugins = {
             })
         end,
         dependencies = { "luarocks.nvim", "nvim-treesitter" }
+    },
+    {
+        "NoahTheDuke/vim-just",
+        ft = { "just" },
     }
 }
 
