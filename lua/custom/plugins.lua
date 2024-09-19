@@ -76,8 +76,7 @@ local plugins = {
                     ["core.dirman"] = { -- Manages Neorg WorkspaceSymbol
                         config = {
                             workspaces = {
-                                personal = "~/Documents/notes/personal",
-                                work = "~/Documents/notes/work"
+                                personal = "~/Documents/notes"
                             },
                             default_workspace = "personal",
                             index = "00_index.norg",
