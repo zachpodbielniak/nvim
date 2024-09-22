@@ -81,11 +81,17 @@ local plugins = {
                             default_workspace = "personal",
                             index = "00_index.norg",
                         }
-                    }
+                    },
+                    ["external.pandoc"] = {}
                 }
             })
         end,
         dependencies = { "luarocks.nvim", "nvim-treesitter" }
+    },
+    {
+        "champignoom/norg-pandoc",
+        branch = "neorg-plugin",
+        config = true,
     },
     {
         "NoahTheDuke/vim-just",
