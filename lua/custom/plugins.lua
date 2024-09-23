@@ -82,11 +82,12 @@ local plugins = {
                             index = "00_index.norg",
                         }
                     },
-                    ["external.pandoc"] = {}
+                    ["external.pandoc"] = {},
+                    ["external.jupyter"] = {}
                 }
             })
         end,
-        dependencies = { "luarocks.nvim", "nvim-treesitter" }
+        dependencies = { "luarocks.nvim", "nvim-treesitter", "tamton-aquib/neorg-jupyter" }
     },
     {
         "champignoom/norg-pandoc",
@@ -96,7 +97,16 @@ local plugins = {
     {
         "NoahTheDuke/vim-just",
         ft = { "just" },
-    }
+    },
+    {
+        "echasnovski/mini.animate",
+        event = "VeryLazy",
+        opts = function(_, opts)
+            opts.scroll = {
+                enable = false,
+            }
+        end,
+    },
 }
 
 return plugins
