@@ -82,6 +82,10 @@ local plugins = {
                             index = "00_index.norg",
                         }
                     },
+                    ["core.autocommands"] = {},
+                    ["core.highlights"] = {},
+                    ["core.integrations.treesitter"] = {},
+                    ["core.export"] = {},
                     ["external.pandoc"] = {},
                     ["external.jupyter"] = {}
                 }
