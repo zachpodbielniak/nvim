@@ -57,3 +57,12 @@ lspconfig.autotools_ls.setup({
     cmd = {"autotools-language-server"},
     single_file_support = true
 })
+
+-- perl
+lspconfig.perlnavigator.setup({
+    on_attach = on_attach,
+    capabilities = capabilities,
+    filetypes = {"perl"},
+    cmd = {"perlnavigator"},
+    single_file_support = true
+})
