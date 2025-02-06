@@ -163,6 +163,15 @@ local plugins = {
     },
     {
         "Pocco81/true-zen.nvim"
+    },
+    {
+        "itchyny/calendar.vim",
+        lazy = false,
+        config = function()
+            -- vim.g.calendar_frame = 'default'
+            vim.g.calendar_google_calendar = 0
+            vim.g.calendar_cache_directory = "~/Documents/notes/.calendar"
+        end
     }
 }
 

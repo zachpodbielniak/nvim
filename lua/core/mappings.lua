@@ -75,6 +75,16 @@ M.general = {
     ["<leader>zf"] = { "<cmd>TZFocus<CR>", "Zenmode Focus"},
     ["<leader>zm"] = { "<cmd>TZMinimalist<CR>", "Zenmode Minimalist"},
     ["<leader>za"] = { "<cmd>TZAtaraxis<CR>", "Zenmode Ataraxis"},
+
+    -- Calendar 
+    ["<leader>cc"] = { "<cmd>Calendar<CR>", "Calendar"},
+    ["<leader>cC"] = { "<cmd>Calendar -view=clock<CR>", "Clock"},
+    ["<leader>cw"] = { "<cmd>Calendar -view=week<CR>", "Calendar (Week)"},
+    ["<leader>cd"] = { "<cmd>Calendar -view=day<CR>", "Calendar (Day)"},
+    ["<leader>cD"] = { "<cmd>Calendar -view=days<CR>", "Calendar (Days)"},
+    ["<leader>cy"] = { "<cmd>Calendar -view=year<CR>", "Calendar (Year)"},
+
+
   },
 
   t = {
