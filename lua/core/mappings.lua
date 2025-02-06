@@ -68,7 +68,7 @@ M.general = {
     ["<leader>oi"] = { "<cmd>Neorg index<CR>", "Neorg Index"},
     ["<leader>or"] = {"<cmd>Neorg return<CR>", "Neorg Return"},
     ["<leader>om"] = {"<cmd>Neorg inject-metadata<CR>", "Neorg Inject Metadata"},
-    ["<leader>ot"] = {"<cmd>Neorg toc", "Neorg TOC"},
+    ["<leader>ot"] = {"<cmd>Neorg toc<CR>", "Neorg TOC"},
 
     -- Zenmode
     ["<leader>zn"] = { "<cmd>TZNarrow<CR>", "Zenmode Narrow"},
