@@ -188,6 +188,8 @@ local plugins = {
                 -- provide an empty list to make provider available (no API key required)
                 -- ollama = {},
                 },
+                state_dir = os.getenv("HOME") .. "/Documents/notes/02_areas/ai/persisted",
+                chat_dir = os.getenv("HOME") .. "/Documents/notes/02_areas/ai/chats",
             }
         end,
     }
