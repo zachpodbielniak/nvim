@@ -84,6 +84,13 @@ M.general = {
     ["<leader>cD"] = { "<cmd>Calendar -view=days<CR>", "Calendar (Days)"},
     ["<leader>cy"] = { "<cmd>Calendar -view=year<CR>", "Calendar (Year)"},
 
+    -- Program running 
+    ["<leader>an"] = { "<cmd>PrtChatNew<CR>", "New AI Chat"},
+    ["<leader>at"] = { "<cmd>PrtChatToggle<CR>", "Toggle AI Chat"},
+    ["<leader>af"] = { "<cmd>PrtChatFinder<CR>", "AI Chat Find"},
+    ["<leader>ai"] = { "<cmd>PrtImplement<CR>", "AI Chat Find"},
+    ["<leader>aa"] = { "<cmd>PrtAsk<CR>", "AI Chat Find"},
+
 
   },
 

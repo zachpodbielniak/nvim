@@ -172,6 +172,24 @@ local plugins = {
             vim.g.calendar_google_calendar = 0
             vim.g.calendar_cache_directory = "~/Documents/notes/.calendar"
         end
+    },
+    {
+        "frankroeder/parrot.nvim",
+        lazy = false,
+        dependencies = { 'ibhagwan/fzf-lua', 'nvim-lua/plenary.nvim' },
+        -- optionally include "rcarriga/nvim-notify" for beautiful notifications
+        config = function()
+            require("parrot").setup {
+                -- Providers must be explicitly added to make them available.
+                providers = {
+                    pplx = {
+                        api_key = os.getenv "PERPLEXITY_TOKEN",
+                    },
+                -- provide an empty list to make provider available (no API key required)
+                -- ollama = {},
+                },
+            }
+        end,
     }
 }
 
