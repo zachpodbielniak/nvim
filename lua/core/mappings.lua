@@ -88,6 +88,7 @@ M.general = {
     ["<leader>an"] = { "<cmd>PrtChatNew<CR>", "New AI Chat"},
     ["<leader>at"] = { "<cmd>PrtChatToggle<CR>", "Toggle AI Chat"},
     ["<leader>ar"] = { "<cmd>PrtChatRespond<CR>", "AI Chat Respond"},
+    ["<leader>as"] = { "<cmd>PrtChatStop<CR>", "AI Chat Stop Responding"},
     ["<leader>af"] = { "<cmd>PrtChatFinder<CR>", "AI Chat Find"},
     ["<leader>ai"] = { "<cmd>PrtImplement<CR>", "AI Implement Highlighted"},
     ["<leader>aa"] = { "<cmd>PrtAsk<CR>", "AI Ask Highlighted"},
