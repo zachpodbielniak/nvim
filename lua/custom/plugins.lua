@@ -185,22 +185,22 @@ local plugins = {
                     pplx = {
                         api_key = os.getenv "PERPLEXITY_TOKEN",
                     },
-                    -- custom = {
-                    --     style = "openai",
-                    --     api_key = "blah",
-                    --     endpoint = "http://localhost:8080/api/generate",
-                    --     models = {
-                    --         "tinyllama"
-                    --     },
-                    --     topic = {
-                    --         model = "tinyllama",
-                    --         params = { max_tokens = -1 },
-                    --     },
-                    --     params = {
-                    --         chat = { temperature = 0.8, top_p = 0.95 },
-                    --         command = { temperature = 0.8, top_p= 0.95 },
-                    --     }
-                    -- },
+                    custom = {
+                        style = "openai",
+                        api_key = "blah",
+                        endpoint = "http://127.0.0.1:8080/v1/chat/completions",
+                        models = {
+                            "llama3.2:3b"
+                        },
+                        topic = {
+                            model = "llama3.2:3b",
+                            params = { max_tokens = -1 },
+                        },
+                        params = {
+                            chat = { temperature = 0.8, top_p = 0.95 },
+                            command = { temperature = 0.8, top_p= 0.95 },
+                        }
+                    },
                 -- provide an empty list to make provider available (no API key required)
                 -- ollama = {},
                 },
