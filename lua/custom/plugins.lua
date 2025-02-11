@@ -208,6 +208,16 @@ local plugins = {
                 chat_dir = os.getenv("HOME") .. "/Documents/notes/03_resources/ai_chats/chats",
             }
         end,
+    },
+    {
+        "CrystalDime/epub.nvim",
+        lazy = false,
+        opts = {
+            auto_open = true,
+            -- output_dir = vim.fn.stdpath("cache") .. "/epub_reader", -- Default output directory (where epubs are unzipped)
+            data_dir = os.getenv("HOME") .. "/Documents/notes/.books/epub_reader",  -- Persistent data directory
+        },
+        config = true,
     }
 }
 
