@@ -218,6 +218,10 @@ local plugins = {
             data_dir = os.getenv("HOME") .. "/Documents/notes/.books/epub_reader",  -- Persistent data directory
         },
         config = true,
+    },
+    {
+        "mtikekar/nvim-send-to-term",
+        lazy = false,
     }
 }
 
