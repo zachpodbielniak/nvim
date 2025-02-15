@@ -90,10 +90,9 @@ M.general = {
     ["<leader>ar"] = { "<cmd>PrtChatRespond<CR>", "AI Chat Respond"},
     ["<leader>as"] = { "<cmd>PrtChatStop<CR>", "AI Chat Stop Responding"},
     ["<leader>af"] = { "<cmd>PrtChatFinder<CR>", "AI Chat Find"},
-    ["<leader>ai"] = { "<cmd>PrtImplement<CR>", "AI Implement Highlighted"},
-    ["<leader>aa"] = { "<cmd>PrtAsk<CR>", "AI Ask Highlighted"},
 
     ["<leader>tt"] = { "<cmd>terminal<CR><cmd>SendHere<CR>", "Open Terminal"},
+    ["<leader>tr"] = { "Vyp!!bash<CR>", "Run Line"},
 
   },
 
@@ -113,6 +112,11 @@ M.general = {
     ["<leader>zf"] = { "<cmd>TZFocus<CR>", "Zenmode Focus"},
     ["<leader>zm"] = { "<cmd>TZMinimalist<CR>", "Zenmode Minimalist"},
     ["<leader>za"] = { "<cmd>TZAtaraxis<CR>", "Zenmode Ataraxis"},
+
+    
+    -- ai chat
+    ["<leader>ai"] = { "<cmd>PrtImplement<CR>", "AI Implement Highlighted"},
+    ["<leader>aa"] = { "<cmd>PrtAsk<CR>", "AI Ask Highlighted"},
   },
 
   x = {
