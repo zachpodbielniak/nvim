@@ -93,6 +93,7 @@ M.general = {
     ["<leader>ai"] = { "<cmd>PrtImplement<CR>", "AI Implement Highlighted"},
     ["<leader>aa"] = { "<cmd>PrtAsk<CR>", "AI Ask Highlighted"},
 
+    ["<leader>tt"] = { "<cmd>terminal<CR><cmd>SendHere<CR>", "Open Terminal"},
 
   },
 
