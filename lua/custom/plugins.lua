@@ -229,10 +229,20 @@ local plugins = {
         lazy = false,
         opts = {
             feeds = {
-                "https://www.reddit.com/r/bash/.rss?sort=new",
-                "https://www.reddit.com/r/c_programming/.rss?sort=new",
-                "https://www.reddit.com/r/fedora/.rss?sort=new",
+                { "https://www.reddit.com/r/bash/.rss?sort=new", name = "reddit-bash", tags = { "reddit", "tech" }},
+                { "https://www.reddit.com/r/C_Programming/.rss?sort=new", name = "reddit-c_programming", tags = { "reddit", "tech" }},
+                { "https://www.reddit.com/r/Fedora/.rss?sort=new", name = "reddit-fedora", tags = { "reddit", "tech", }},
+                { "https://www.reddit.com/r/Fire/.rss?sort=new", name = "reddit-fire", tags = { "reddit", "finance" }},
+                { "https://www.reddit.com/r/dividends/.rss?sort=new", name = "reddit-dividends", tags = { "reddit", "finance", "investing" }},
 
+                { "https://www.newsmax.com/rss/Newsfront/16/", name = "newsmax-newsfront", tags = { "news", "headlines" }},
+                { "https://www.newsmax.com/rss/US/18/", name = "newsmax-america", tags = { "news" }},
+                { "https://www.newsmax.com/rss/Health-News/177/", name = "newsmax-tophealth", tags = { "news", "headlines", "health" }},
+                { "https://www.newsmax.com/rss/Companies/6/", name = "newsmax-companies", tags = { "news", "finance", "companies" }},
+                { "https://www.newsmax.com/rss/InvestingAnalysis/17/", name = "newsmax-investing", tags = { "news", "finance", "investing" }},
+                { "https://www.newsmax.com/rss/Economy/2/", name = "newsmax-economy", tags = { "news", "finance" }},
+                { "https://www.newsmax.com/rss/FinanceNews/4/", name = "newsmax-finance", tags = { "news", "finance" }},
+                { "https://www.newsmax.com/rss/Headline/76/", name = "newsmax-finace-headlines", tags = { "news", "headlines", "finance" }}
             }
         }
     },

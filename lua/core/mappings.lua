@@ -94,6 +94,10 @@ M.general = {
     ["<leader>tt"] = { "<cmd>terminal<CR><cmd>SendHere<CR>", "Open Terminal"},
     ["<leader>tr"] = { "Vyp!!bash<CR>", "Run Line"},
 
+    -- Feed mappings 
+    ["fu"] = { "<cmd>Feed update<CR>", "Update RSS Feeds"},
+    ["fi"] = { "<cmd>Feed index<CR>", "Open RSS Feeds Inbox"},
+
   },
 
   t = {
