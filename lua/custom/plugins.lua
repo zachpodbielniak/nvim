@@ -242,7 +242,9 @@ local plugins = {
                 { "https://www.newsmax.com/rss/InvestingAnalysis/17/", name = "newsmax-investing", tags = { "news", "finance", "investing" }},
                 { "https://www.newsmax.com/rss/Economy/2/", name = "newsmax-economy", tags = { "news", "finance" }},
                 { "https://www.newsmax.com/rss/FinanceNews/4/", name = "newsmax-finance", tags = { "news", "finance" }},
-                { "https://www.newsmax.com/rss/Headline/76/", name = "newsmax-finace-headlines", tags = { "news", "headlines", "finance" }}
+                { "https://www.newsmax.com/rss/Headline/76/", name = "newsmax-finace-headlines", tags = { "news", "headlines", "finance" }},
+
+                { "https://www.dailywire.com/feeds/rss.xml", name = "dailywire", tags = { "news" }},
             }
         }
     },
