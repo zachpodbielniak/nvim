@@ -227,7 +227,14 @@ local plugins = {
         "neo451/feed.nvim",
         cmd = "Feed",
         lazy = false,
-        opts = {}
+        opts = {
+            feeds = {
+                "https://www.reddit.com/r/bash/.rss?sort=new",
+                "https://www.reddit.com/r/c_programming/.rss?sort=new",
+                "https://www.reddit.com/r/fedora/.rss?sort=new",
+
+            }
+        }
     },
     {
         "folke/snacks.nvim",
@@ -250,6 +257,7 @@ local plugins = {
             scroll = { enabled = true },
             statuscolumn = { enabled = true },
             words = { enabled = true },
+            zen = { enabled = true}
         },
     }
 }
