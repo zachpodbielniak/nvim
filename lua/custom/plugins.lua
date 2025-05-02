@@ -185,15 +185,16 @@ local plugins = {
                     pplx = {
                         api_key = os.getenv "PERPLEXITY_TOKEN",
                     },
+                    ollama = {},
                     custom = {
                         style = "openai",
                         api_key = "blah",
                         endpoint = "http://127.0.0.1:8080/v1/chat/completions",
                         models = {
-                            "llama3.2:3b"
+                            "llama3.1:8b"
                         },
                         topic = {
-                            model = "llama3.2:3b",
+                            model = "llama3.1:8b",
                             params = { max_tokens = -1 },
                         },
                         params = {
