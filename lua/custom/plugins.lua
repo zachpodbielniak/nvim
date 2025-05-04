@@ -278,8 +278,6 @@ local plugins = {
         event = "VeryLazy",
         version = false, -- Never set this value to "*"! Never!
         opts = {
-            -- add any opts here
-            -- for example
             provider = "openai",
             openai = {
                 -- endpoint = "https://api.openai.com/v1",
@@ -290,6 +288,12 @@ local plugins = {
                 max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
                 --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
             },
+            perplexity = {
+                __inherited_from = "openai",
+                api_key_name = "PERPLEXITY_TOKEN",
+                endpoint = "https://api.perplexity.ai",
+                model = "sonar-pro"
+            }
         },
         -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
         build = "make",
