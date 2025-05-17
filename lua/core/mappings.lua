@@ -103,9 +103,13 @@ M.general = {
   },
 
   t = {
-    ["<C-x>"] = { vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), "Escape terminal mode" },
     ["<esc>"] = { vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), "Escape terminal mode" },
+    
+    -- send esc to child application
+    ["<C-x>"] = { function() vim.api.nvim_feedkeys("\x1b", "t", false) end, "Send <Esc> to terminal app" },
   },
+    -- ["<C-<esc>>"] = { vim.fn.term_sendkeys(0, "\27").."<CR>"), "Send <ESC> to terminal"}
+   -- vim.keymap.set('t', '<C-E>', [[<C-\><C-N>:lua vim.api.nvim_buf_call(0, function() vim.fn.term_sendkeys(0, "\27") end)<CR>i]], { noremap = true, silent = true })
 
   v = {
     ["<Up>"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
