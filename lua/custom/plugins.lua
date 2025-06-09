@@ -336,6 +336,10 @@ local plugins = {
                 ft = { "markdown", "Avante" },
             },
         },
+    },
+    {
+        "alaviss/nim.nvim",
+        lazy = false
     }
 }
 
