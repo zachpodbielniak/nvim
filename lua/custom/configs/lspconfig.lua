@@ -66,3 +66,21 @@ lspconfig.perlnavigator.setup({
     cmd = {"perlnavigator"},
     single_file_support = true
 })
+
+-- haskell 
+lspconfig.hls.setup({
+    on_attach = on_attach,
+    capabilities = capabilities,
+    filetypes = {"haskell", "lhaskell"},
+    cmd = {"haskell-language-server-wrapper", "--lsp"},
+    single_file_support = true
+})
+
+-- nim
+lspconfig.nim_langserver.setup({
+    on_attach = on_attach,
+    capabilities = capabilities,
+    filetypes = {"nim"},
+    cmd = {"nimlangserver", "--lsp"},
+    single_file_support = true
+})
