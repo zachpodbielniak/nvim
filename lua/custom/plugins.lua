@@ -282,18 +282,18 @@ local plugins = {
             openai = {
                 -- endpoint = "https://api.openai.com/v1",
                 endpoint = "http://127.0.0.1:11434/v1",
-                model = "llama3.1:8b", -- your desired model (or use gpt-4o, etc.)
+                model = "gemma3:12b", -- your desired model (or use gpt-4o, etc.)
                 timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
                 temperature = 0,
                 max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
                 --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
             },
-            perplexity = {
-                __inherited_from = "openai",
-                api_key_name = "PERPLEXITY_TOKEN",
-                endpoint = "https://api.perplexity.ai",
-                model = "sonar-pro"
-            }
+            -- perplexity = {
+            --     __inherited_from = "openai",
+            --     api_key_name = "PERPLEXITY_TOKEN",
+            --     endpoint = "https://api.perplexity.ai",
+            --     model = "sonar-pro"
+            -- }
         },
         -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
         build = "make",
