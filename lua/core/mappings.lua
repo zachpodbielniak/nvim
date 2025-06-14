@@ -97,8 +97,8 @@ M.general = {
     ["<leader>tr"] = { "Vyp!!bash<CR>", "Run Line"},
 
     -- Feed mappings 
-    ["fu"] = { "<cmd>Feed update<CR>", "Update RSS Feeds"},
-    ["fi"] = { "<cmd>Feed index<CR>", "Open RSS Feeds Inbox"},
+    ["<leader>fu"] = { "<cmd>Feed update<CR>", "Update RSS Feeds"},
+    ["<leader>fi"] = { "<cmd>Feed index<CR>", "Open RSS Feeds Inbox"},
 
   },
 
