@@ -173,43 +173,44 @@ local plugins = {
             vim.g.calendar_cache_directory = "~/Documents/notes/.calendar"
         end
     },
-    {
-        "frankroeder/parrot.nvim",
-        lazy = false,
-        dependencies = { 'ibhagwan/fzf-lua', 'nvim-lua/plenary.nvim' },
-        -- optionally include "rcarriga/nvim-notify" for beautiful notifications
-        config = function()
-            require("parrot").setup {
-                -- Providers must be explicitly added to make them available.
-                providers = {
-                    pplx = {
-                        api_key = os.getenv "PERPLEXITY_TOKEN",
-                    },
-                    ollama = {},
-                    custom = {
-                        style = "openai",
-                        api_key = "blah",
-                        endpoint = "http://127.0.0.1:8080/v1/chat/completions",
-                        models = {
-                            "llama3.1:8b"
-                        },
-                        topic = {
-                            model = "llama3.1:8b",
-                            params = { max_tokens = -1 },
-                        },
-                        params = {
-                            chat = { temperature = 0.8, top_p = 0.95 },
-                            command = { temperature = 0.8, top_p= 0.95 },
-                        }
-                    },
-                -- provide an empty list to make provider available (no API key required)
-                -- ollama = {},
-                },
-                state_dir = os.getenv("HOME") .. "/Documents/notes/03_resources/ai_chats/persisted",
-                chat_dir = os.getenv("HOME") .. "/Documents/notes/03_resources/ai_chats/chats",
-            }
-        end,
-    },
+    -- disable parrot for now as i prefer avante
+    -- {
+    --     "frankroeder/parrot.nvim",
+    --     lazy = false,
+    --     dependencies = { 'ibhagwan/fzf-lua', 'nvim-lua/plenary.nvim' },
+    --     -- optionally include "rcarriga/nvim-notify" for beautiful notifications
+    --     config = function()
+    --         require("parrot").setup {
+    --             -- Providers must be explicitly added to make them available.
+    --             providers = {
+    --                 pplx = {
+    --                     api_key = os.getenv "PERPLEXITY_TOKEN",
+    --                 },
+    --                 -- ollama = {},
+    --                 -- custom = {
+    --                 --     style = "openai",
+    --                 --     api_key = "blah",
+    --                 --     endpoint = "http://127.0.0.1:8080/v1/chat/completions",
+    --                 --     models = {
+    --                 --         "llama3.1:8b"
+    --                 --     },
+    --                 --     topic = {
+    --                 --         model = "llama3.1:8b",
+    --                 --         params = { max_tokens = -1 },
+    --                 --     },
+    --                 --     params = {
+    --                 --         chat = { temperature = 0.8, top_p = 0.95 },
+    --                 --         command = { temperature = 0.8, top_p= 0.95 },
+    --                 --     }
+    --                 -- },
+    --             -- provide an empty list to make provider available (no API key required)
+    --             -- ollama = {},
+    --             },
+    --             state_dir = os.getenv("HOME") .. "/Documents/notes/03_resources/ai_chats/persisted",
+    --             chat_dir = os.getenv("HOME") .. "/Documents/notes/03_resources/ai_chats/chats",
+    --         }
+    --     end,
+    -- },
     {
         "CrystalDime/epub.nvim",
         lazy = false,
@@ -278,22 +279,43 @@ local plugins = {
         event = "VeryLazy",
         version = false, -- Never set this value to "*"! Never!
         opts = {
-            provider = "openai",
-            openai = {
-                -- endpoint = "https://api.openai.com/v1",
-                endpoint = "http://127.0.0.1:11434/v1",
-                model = "gemma3:12b", -- your desired model (or use gpt-4o, etc.)
-                timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
-                temperature = 0,
-                max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
-                --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
+            provider = "ollama",
+            providers = { 
+                ollama = {
+                    endpoint = "http://127.0.0.1:11434",
+                    model = "gemma3:12b",
+                },
+                openai = {
+                    endpoint = "https://api.openai.com/v1",
+                    model = "gpt-4o",
+                },
+                anthropic = {
+                    endpoint = "https://api.anthropic.com",
+                    model = "claude-sonnet-4-20250514"
+
+                }
             },
+            -- openai = {
+            --     -- endpoint = "https://api.openai.com/v1",
+            --     endpoint = "http://127.0.0.1:11434/v1",
+            --     model = "gemma3:12b", -- your desired model (or use gpt-4o, etc.)
+            --     timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
+            --     temperature = 0,
+            --     max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
+            --     --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
+            -- },
             -- perplexity = {
             --     __inherited_from = "openai",
             --     api_key_name = "PERPLEXITY_TOKEN",
             --     endpoint = "https://api.perplexity.ai",
             --     model = "sonar-pro"
             -- }
+            mappings = {
+                submit = {
+                    normal = "<CR>",
+                    insert = "<C-i>"
+                }
+            }
         },
         -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
         build = "make",
