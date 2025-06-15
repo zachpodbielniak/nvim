@@ -108,6 +108,10 @@ M.general = {
     
     -- send esc to child application
     -- ["<C-x>"] = { function() vim.api.nvim_feedkeys("\x1b", "t", false) end, "Send <Esc> to terminal app" },
+    ["<C-h>"] = { "<Cmd>TmuxNavigateLeft<CR>", "Move left" },
+    ["<C-l>"] = { "<Cmd>TmuxNavigateRight<CR>", "Move right" },
+    ["<C-j>"] = { "<Cmd>TmuxNavigateDown<CR>", "Move down" },
+    ["<C-k>"] = { "<Cmd>TmuxNavigateUp<CR>", "Move up" },
   },
     -- ["<C-<esc>>"] = { vim.fn.term_sendkeys(0, "\27").."<CR>"), "Send <ESC> to terminal"}
    -- vim.keymap.set('t', '<C-E>', [[<C-\><C-N>:lua vim.api.nvim_buf_call(0, function() vim.fn.term_sendkeys(0, "\27") end)<CR>i]], { noremap = true, silent = true })
