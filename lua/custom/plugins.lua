@@ -367,7 +367,23 @@ local plugins = {
         'mrcjkb/haskell-tools.nvim',
         version = '^5', -- Recommended
         lazy = false, -- This plugin is already lazy
-    }
+    },
+    {
+        "ellisonleao/glow.nvim",
+        lazy = false,
+        config = true,
+        cmd = "Glow"
+    },
+    {
+        "iamcco/markdown-preview.nvim",
+        lazy = false,
+        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+        build = "cd app && yarn install",
+        init = function()
+            vim.g.mkdp_filetypes = { "markdown" }
+        end,
+        ft = { "markdown" },
+    },
 }
 
 return plugins
