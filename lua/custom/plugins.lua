@@ -268,7 +268,7 @@ local plugins = {
             notifier = { enabled = true },
             quickfile = { enabled = true },
             scope = { enabled = true },
-            scroll = { enabled = true },
+            scroll = { enabled = false }, -- causes nvim to be SUPER slow in scrolling
             statuscolumn = { enabled = true },
             words = { enabled = true },
             zen = { enabled = true}
