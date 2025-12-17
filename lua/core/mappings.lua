@@ -100,6 +100,47 @@ M.general = {
     ["<leader>fu"] = { "<cmd>Feed update<CR>", "Update RSS Feeds"},
     ["<leader>fi"] = { "<cmd>Feed index<CR>", "Open RSS Feeds Inbox"},
 
+    -- Inline transclusions
+    ["<leader>te"] = {
+        function()
+          local line = vim.api.nvim_get_current_line()
+          local path = line:match('!%[%[(.-)%]%]')
+          if path then
+            -- Resolve relative to current file or notes root
+            local full_path = vim.fn.expand('~/Documents/notes/' .. path)
+            if vim.fn.filereadable(full_path) == 1 then
+              local content = vim.fn.readfile(full_path)
+              local row = vim.api.nvim_win_get_cursor(0)[1]
+              vim.api.nvim_buf_set_lines(0, row, row, false, content)
+            end
+          end
+        end
+    },
+    ["<leader>tf"] = {
+        function()
+          local line = vim.api.nvim_get_current_line()
+          local path = line:match('!%[%[(.-)%]%]')
+          if path then
+            local full_path = vim.fn.expand('~/Documents/notes/' .. path)
+            if vim.fn.filereadable(full_path) == 1 then
+              local content = vim.fn.readfile(full_path)
+              local buf = vim.api.nvim_create_buf(false, true)
+              vim.api.nvim_buf_set_lines(buf, 0, -1, false, content)
+              vim.api.nvim_buf_set_option(buf, 'filetype', 'markdown')
+              local width = math.min(80, vim.o.columns - 4)
+              local height = math.min(#content, 20)
+              vim.api.nvim_open_win(buf, true, {
+                relative = 'cursor',
+                row = 1, col = 0,
+                width = width, height = height,
+                style = 'minimal',
+                border = 'rounded',
+              })
+            end
+          end
+        end
+    },
+
   },
 
   t = {
