@@ -100,13 +100,18 @@ M.general = {
     ["<leader>fu"] = { "<cmd>Feed update<CR>", "Update RSS Feeds"},
     ["<leader>fi"] = { "<cmd>Feed index<CR>", "Open RSS Feeds Inbox"},
 
-    -- Inline transclusions
+    -- Inline transclusions (supports ![[path]] and [title](path))
     ["<leader>te"] = {
         function()
           local line = vim.api.nvim_get_current_line()
+          -- Try transclusion format first, then markdown link
           local path = line:match('!%[%[(.-)%]%]')
+          if not path then
+            path = line:match('%[.-%]%((.-)%)')
+            -- Skip URLs
+            if path and path:match('^https?://') then path = nil end
+          end
           if path then
-            -- Resolve relative to current file or notes root
             local full_path = vim.fn.expand('~/Documents/notes/' .. path)
             if vim.fn.filereadable(full_path) == 1 then
               local content = vim.fn.readfile(full_path)
@@ -115,12 +120,18 @@ M.general = {
             end
           end
         end,
-        "expand transclusion here"
+        "expand link content here"
     },
     ["<leader>tf"] = {
         function()
           local line = vim.api.nvim_get_current_line()
+          -- Try transclusion format first, then markdown link
           local path = line:match('!%[%[(.-)%]%]')
+          if not path then
+            path = line:match('%[.-%]%((.-)%)')
+            -- Skip URLs
+            if path and path:match('^https?://') then path = nil end
+          end
           if path then
             local full_path = vim.fn.expand('~/Documents/notes/' .. path)
             if vim.fn.filereadable(full_path) == 1 then
@@ -140,7 +151,7 @@ M.general = {
             end
           end
         end,
-        "open transclusion floating window"
+        "open link in floating window"
     },
 
     -- Vimban: regenerate VIMBAN section under cursor
@@ -160,14 +171,30 @@ M.general = {
         "vimban: regenerate section",
     },
 
-    -- Vimban: go to transclusion link under cursor
+    -- Vimban: go to link under cursor (supports ![[path]] and [title](path))
     ["<leader>tg"] = {
         function()
             local line = vim.fn.getline('.')
             local col = vim.fn.col('.')
+            local notes_dir = vim.fn.expand('~/Documents/notes/')
+
+            -- Check transclusion links: ![[path]]
             for s, path, e in line:gmatch('()!%[%[([^%]]+)%]%]()') do
                 if col >= s and col <= e then
-                    local full = vim.fn.expand('~/Documents/notes/') .. path
+                    local full = notes_dir .. path
+                    if vim.fn.filereadable(full) == 1 then
+                        vim.cmd('edit ' .. full)
+                    end
+                    return
+                end
+            end
+
+            -- Check markdown links: [title](path)
+            for s, _, path, e in line:gmatch('()%[([^%]]+)%]%(([^%)]+)%)()') do
+                if col >= s and col <= e then
+                    -- Skip URLs
+                    if path:match('^https?://') then return end
+                    local full = notes_dir .. path
                     if vim.fn.filereadable(full) == 1 then
                         vim.cmd('edit ' .. full)
                     end
@@ -175,7 +202,7 @@ M.general = {
                 end
             end
         end,
-        "vimban: go to transclusion",
+        "go to link under cursor",
     },
 
     -- Vimban: daily dashboard floating window
