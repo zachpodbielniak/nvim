@@ -114,7 +114,8 @@ M.general = {
               vim.api.nvim_buf_set_lines(0, row, row, false, content)
             end
           end
-        end
+        end,
+        "expand transclusion here"
     },
     ["<leader>tf"] = {
         function()
@@ -138,7 +139,177 @@ M.general = {
               })
             end
           end
-        end
+        end,
+        "open transclusion floating window"
+    },
+
+    -- Vimban: regenerate VIMBAN section under cursor
+    ["<leader>vR"] = {
+        function()
+            local start_line = vim.fn.search('VIMBAN:[A-Z_]*:START', 'bnW')
+            local end_line = vim.fn.search('VIMBAN:[A-Z_]*:END', 'nW')
+            if start_line > 0 and end_line > 0 then
+                local marker = vim.fn.getline(start_line)
+                local section = marker:match('VIMBAN:(%w+):START')
+                local file = vim.fn.expand('%:p')
+                local rel = file:gsub(vim.fn.expand('~/Documents/notes/'), '')
+                vim.cmd(string.format('%d,%d!vimban dashboard --section %s --person "![[%s]]"',
+                    start_line, end_line, section:lower(), rel))
+            end
+        end,
+        "vimban: regenerate section",
+    },
+
+    -- Vimban: go to transclusion link under cursor
+    ["<leader>tg"] = {
+        function()
+            local line = vim.fn.getline('.')
+            local col = vim.fn.col('.')
+            for s, path, e in line:gmatch('()!%[%[([^%]]+)%]%]()') do
+                if col >= s and col <= e then
+                    local full = vim.fn.expand('~/Documents/notes/') .. path
+                    if vim.fn.filereadable(full) == 1 then
+                        vim.cmd('edit ' .. full)
+                    end
+                    return
+                end
+            end
+        end,
+        "vimban: go to transclusion",
+    },
+
+    -- Vimban: daily dashboard floating window
+    ["<leader>vd"] = {
+        function()
+            local buf = vim.api.nvim_create_buf(false, true)
+            vim.api.nvim_buf_set_lines(buf, 0, -1, false,
+                vim.fn.systemlist('vimban dashboard daily'))
+            vim.api.nvim_buf_set_option(buf, 'filetype', 'markdown')
+            local w = math.floor(vim.o.columns * 0.8)
+            local h = math.floor(vim.o.lines * 0.8)
+            vim.api.nvim_open_win(buf, true, {
+                relative = 'editor', width = w, height = h,
+                col = (vim.o.columns - w) / 2, row = (vim.o.lines - h) / 2,
+                style = 'minimal', border = 'rounded',
+            })
+            vim.keymap.set('n', 'q', ':close<CR>', { buffer = buf })
+        end,
+        "vimban: dashboard",
+    },
+
+    -- Vimban: FZF ticket picker
+    ["<leader>vl"] = {
+        function()
+            local result = vim.fn.system(
+                'vimban list --mine -f plain --no-header | fzf --preview "vimban show {1} -f md"')
+            local id = vim.fn.trim(result):match('^%S+')
+            if id and id ~= '' then
+                vim.cmd('vsplit | terminal vimban show ' .. id)
+            end
+        end,
+        "vimban: fzf tickets",
+    },
+
+    -- Vimban: kanban board floating window
+    ["<leader>vk"] = {
+        function()
+            local buf = vim.api.nvim_create_buf(false, true)
+            vim.api.nvim_buf_set_lines(buf, 0, -1, false,
+                vim.fn.systemlist('vimban kanban -f md --mine'))
+            vim.api.nvim_buf_set_option(buf, 'filetype', 'markdown')
+            local w = math.floor(vim.o.columns * 0.9)
+            local h = math.floor(vim.o.lines * 0.8)
+            vim.api.nvim_open_win(buf, true, {
+                relative = 'editor', width = w, height = h,
+                col = (vim.o.columns - w) / 2, row = (vim.o.lines - h) / 2,
+                style = 'minimal', border = 'rounded',
+            })
+            vim.keymap.set('n', 'q', ':close<CR>', { buffer = buf })
+        end,
+        "vimban: kanban board",
+    },
+
+    -- Vimban: move current ticket status
+    ["<leader>vm"] = {
+        function()
+            local id = nil
+            for _, line in ipairs(vim.api.nvim_buf_get_lines(0, 0, 20, false)) do
+                id = line:match('^id:%s*"?([^"]+)"?')
+                if id then break end
+            end
+            if not id then return end
+            vim.ui.select(
+                {'ready', 'in_progress', 'blocked', 'review', 'done'},
+                { prompt = 'Status:' },
+                function(s)
+                    if s then
+                        vim.fn.system('vimban move ' .. id .. ' ' .. s)
+                        vim.cmd('edit!')
+                    end
+                end
+            )
+        end,
+        "vimban: move ticket",
+    },
+
+    -- Vimban: add comment to current ticket
+    ["<leader>vC"] = {
+        function()
+            local lines = vim.api.nvim_buf_get_lines(0, 0, 50, false)
+            local ticket_id = nil
+            for _, line in ipairs(lines) do
+                local id = line:match('^id:%s*"?([^"]+)"?')
+                if id then
+                    ticket_id = id
+                    break
+                end
+            end
+            if not ticket_id then
+                vim.notify("No ticket ID found in frontmatter", vim.log.levels.WARN)
+                return
+            end
+            vim.ui.input({ prompt = "Comment: " }, function(input)
+                if input and input ~= "" then
+                    local cmd = string.format("vimban comment %s %q", ticket_id, input)
+                    local result = vim.fn.system(cmd)
+                    vim.notify(result, vim.log.levels.INFO)
+                    vim.cmd("edit!")
+                end
+            end)
+        end,
+        "vimban: add comment",
+    },
+
+    -- Vimban: reply to comment on current ticket
+    ["<leader>vr"] = {
+        function()
+            local lines = vim.api.nvim_buf_get_lines(0, 0, 50, false)
+            local ticket_id = nil
+            for _, line in ipairs(lines) do
+                local id = line:match('^id:%s*"?([^"]+)"?')
+                if id then
+                    ticket_id = id
+                    break
+                end
+            end
+            if not ticket_id then
+                vim.notify("No ticket ID found in frontmatter", vim.log.levels.WARN)
+                return
+            end
+            vim.ui.input({ prompt = "Reply to comment #: " }, function(reply_to)
+                if reply_to and reply_to ~= "" then
+                    vim.ui.input({ prompt = "Reply: " }, function(input)
+                        if input and input ~= "" then
+                            local cmd = string.format("vimban comment %s %q --reply-to %s", ticket_id, input, reply_to)
+                            local result = vim.fn.system(cmd)
+                            vim.notify(result, vim.log.levels.INFO)
+                            vim.cmd("edit!")
+                        end
+                    end)
+                end
+            end)
+        end,
+        "vimban: reply to comment",
     },
 
   },
@@ -176,6 +347,20 @@ M.general = {
 
     -- neorg
     ["ft"] = { "!column -t -s '|' -o '|'<CR>", "Format Table"},
+
+    -- Vimban: create ticket from selection
+    ["<leader>vc"] = {
+        function()
+            local lines = vim.fn.getline("'<", "'>")
+            local title = table.concat(lines, ' ')
+            vim.ui.select({'task', 'bug', 'story', 'research'}, { prompt = 'Type:' },
+                function(t)
+                    if t then vim.fn.system(string.format('vimban create %s "%s"', t, title)) end
+                end
+            )
+        end,
+        "vimban: create from selection",
+    },
   },
 
   x = {
@@ -465,7 +650,7 @@ M.nvterm = {
       "New horizontal term",
     },
 
-    ["<leader>v"] = {
+    ["<leader>tv"] = {
       function()
         require("nvterm.terminal").new "vertical"
       end,
