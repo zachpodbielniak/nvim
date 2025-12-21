@@ -100,11 +100,24 @@ M.general = {
     ["<leader>fu"] = { "<cmd>Feed update<CR>", "Update RSS Feeds"},
     ["<leader>fi"] = { "<cmd>Feed index<CR>", "Open RSS Feeds Inbox"},
 
-    -- Inline transclusions (supports ![[path]] and [title](path))
+    -- Inline transclusions (supports ![[path]], ![[!command]], [title](path), [title](!command))
     ["<leader>te"] = {
         function()
           local line = vim.api.nvim_get_current_line()
-          -- Try transclusion format first, then markdown link
+
+          -- Check for command transclusion: ![[!command]] or [title](!command)
+          local cmd = line:match('!%[%[!(.-)%]%]')
+          if not cmd then
+            cmd = line:match('%[.-%]%(!(.-)%)')
+          end
+          if cmd then
+            local output = vim.fn.systemlist(cmd)
+            local row = vim.api.nvim_win_get_cursor(0)[1]
+            vim.api.nvim_buf_set_lines(0, row, row, false, output)
+            return
+          end
+
+          -- Try file transclusion format first, then markdown link
           local path = line:match('!%[%[(.-)%]%]')
           if not path then
             path = line:match('%[.-%]%((.-)%)')
@@ -120,12 +133,59 @@ M.general = {
             end
           end
         end,
-        "expand link content here"
+        "expand link or run command inline"
     },
     ["<leader>tf"] = {
         function()
           local line = vim.api.nvim_get_current_line()
-          -- Try transclusion format first, then markdown link
+
+          -- Helper to calculate dynamic window size
+          local function calc_float_size(content)
+            -- Find max line width
+            local max_width = 0
+            for _, l in ipairs(content) do
+              max_width = math.max(max_width, #l)
+            end
+            -- Dynamic width: content width + padding, capped at 85% of screen
+            local width = math.min(max_width + 4, math.floor(vim.o.columns * 0.85))
+            width = math.max(width, 40)  -- minimum width
+            -- Dynamic height: content lines, capped at 80% of screen
+            local height = math.min(#content, math.floor(vim.o.lines * 0.8))
+            height = math.max(height, 3)  -- minimum height
+            return width, height
+          end
+
+          -- Helper to open centered floating window
+          local function open_float(content)
+            local buf = vim.api.nvim_create_buf(false, true)
+            vim.api.nvim_buf_set_lines(buf, 0, -1, false, content)
+            vim.api.nvim_buf_set_option(buf, 'filetype', 'markdown')
+            local width, height = calc_float_size(content)
+            -- Center in editor
+            local row = math.floor((vim.o.lines - height) / 2)
+            local col = math.floor((vim.o.columns - width) / 2)
+            vim.api.nvim_open_win(buf, true, {
+              relative = 'editor',
+              row = row, col = col,
+              width = width, height = height,
+              style = 'minimal',
+              border = 'rounded',
+            })
+            vim.keymap.set('n', 'q', ':close<CR>', { buffer = buf, silent = true })
+          end
+
+          -- Check for command transclusion: ![[!command]] or [title](!command)
+          local cmd = line:match('!%[%[!(.-)%]%]')
+          if not cmd then
+            cmd = line:match('%[.-%]%(!(.-)%)')
+          end
+          if cmd then
+            local output = vim.fn.systemlist(cmd)
+            open_float(output)
+            return
+          end
+
+          -- Try file transclusion format first, then markdown link
           local path = line:match('!%[%[(.-)%]%]')
           if not path then
             path = line:match('%[.-%]%((.-)%)')
@@ -136,22 +196,11 @@ M.general = {
             local full_path = vim.fn.expand('~/Documents/notes/' .. path)
             if vim.fn.filereadable(full_path) == 1 then
               local content = vim.fn.readfile(full_path)
-              local buf = vim.api.nvim_create_buf(false, true)
-              vim.api.nvim_buf_set_lines(buf, 0, -1, false, content)
-              vim.api.nvim_buf_set_option(buf, 'filetype', 'markdown')
-              local width = math.min(80, vim.o.columns - 4)
-              local height = math.min(#content, 20)
-              vim.api.nvim_open_win(buf, true, {
-                relative = 'cursor',
-                row = 1, col = 0,
-                width = width, height = height,
-                style = 'minimal',
-                border = 'rounded',
-              })
+              open_float(content)
             end
           end
         end,
-        "open link in floating window"
+        "open link or run command in floating window"
     },
 
     -- Vimban: regenerate VIMBAN section under cursor
@@ -171,14 +220,39 @@ M.general = {
         "vimban: regenerate section",
     },
 
-    -- Vimban: go to link under cursor (supports ![[path]] and [title](path))
+    -- Go to link under cursor (supports ![[path]], ![[!command]], [title](path), [title](!command))
     ["<leader>tg"] = {
         function()
             local line = vim.fn.getline('.')
             local col = vim.fn.col('.')
             local notes_dir = vim.fn.expand('~/Documents/notes/')
 
-            -- Check transclusion links: ![[path]]
+            -- Check command transclusion links: ![[!command]]
+            for s, cmd, e in line:gmatch('()!%[%[!([^%]]+)%]%]()') do
+                if col >= s and col <= e then
+                    -- Execute command, save to temp file, open in buffer
+                    local output = vim.fn.system(cmd)
+                    local tmpfile = vim.fn.tempname() .. '.md'
+                    vim.fn.writefile(vim.split(output, '\n'), tmpfile)
+                    vim.cmd('edit ' .. tmpfile)
+                    return
+                end
+            end
+
+            -- Check markdown command links: [title](!command)
+            for s, _, cmd, e in line:gmatch('()%[([^%]]+)%]%((!.-)%)()') do
+                if col >= s and col <= e then
+                    -- Remove leading ! from command
+                    cmd = cmd:sub(2)
+                    local output = vim.fn.system(cmd)
+                    local tmpfile = vim.fn.tempname() .. '.md'
+                    vim.fn.writefile(vim.split(output, '\n'), tmpfile)
+                    vim.cmd('edit ' .. tmpfile)
+                    return
+                end
+            end
+
+            -- Check file transclusion links: ![[path]]
             for s, path, e in line:gmatch('()!%[%[([^%]]+)%]%]()') do
                 if col >= s and col <= e then
                     local full = notes_dir .. path
@@ -192,8 +266,9 @@ M.general = {
             -- Check markdown links: [title](path)
             for s, _, path, e in line:gmatch('()%[([^%]]+)%]%(([^%)]+)%)()') do
                 if col >= s and col <= e then
-                    -- Skip URLs
+                    -- Skip URLs and commands (already handled above)
                     if path:match('^https?://') then return end
+                    if path:match('^!') then return end
                     local full = notes_dir .. path
                     if vim.fn.filereadable(full) == 1 then
                         vim.cmd('edit ' .. full)
@@ -202,7 +277,7 @@ M.general = {
                 end
             end
         end,
-        "go to link under cursor",
+        "go to link or run command under cursor",
     },
 
     -- Vimban: daily dashboard floating window
