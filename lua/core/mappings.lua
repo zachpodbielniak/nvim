@@ -94,7 +94,55 @@ M.general = {
     ["<leader>ap"] = { "<cmd>PrtProvider<CR>", "AI Provider Selector"},
 
     ["<leader>tt"] = { "<cmd>terminal<CR><cmd>SendHere<CR>", "Open Terminal"},
-    ["<leader>tr"] = { "Vyp!!bash<CR>", "Run Line"},
+
+    -- Run transclusion silently (show errors in tab) or run line
+    ["<leader>tr"] = {
+        function()
+            local line = vim.api.nvim_get_current_line()
+
+            -- Check for command transclusion: ![[!command]] or [title](!command)
+            local cmd = line:match('!%[%[!(.-)%]%]')
+            if not cmd then
+                cmd = line:match('%[.-%]%(!(.-)%)')
+            end
+
+            if cmd then
+                -- Run transclusion command silently
+                local output = vim.fn.system(cmd)
+                local exit_code = vim.v.shell_error
+
+                if exit_code ~= 0 then
+                    -- Error: open new tab with output and exit code
+                    vim.cmd('tabnew')
+                    local buf = vim.api.nvim_get_current_buf()
+                    local lines = {}
+                    table.insert(lines, '# Command Failed')
+                    table.insert(lines, '')
+                    table.insert(lines, '**Command**: `' .. cmd .. '`')
+                    table.insert(lines, '**Exit Code**: ' .. exit_code)
+                    table.insert(lines, '')
+                    table.insert(lines, '## Output')
+                    table.insert(lines, '')
+                    -- Append command output
+                    for _, l in ipairs(vim.split(output, '\n')) do
+                        table.insert(lines, l)
+                    end
+                    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+                    vim.api.nvim_set_option_value('filetype', 'markdown', { buf = buf })
+                    vim.api.nvim_set_option_value('buftype', 'nofile', { buf = buf })
+                    vim.api.nvim_set_option_value('bufhidden', 'wipe', { buf = buf })
+                else
+                    -- Success: show brief notification
+                    vim.notify('✓ ' .. cmd:match('^%S+'), vim.log.levels.INFO)
+                end
+            else
+                -- No transclusion, fall back to run line behavior (Vyp!!bash<CR>)
+                local keys = vim.api.nvim_replace_termcodes('Vyp!!bash<CR>', true, false, true)
+                vim.api.nvim_feedkeys(keys, 'n', false)
+            end
+        end,
+        "Run transclusion silently or run line"
+    },
 
     -- Feed mappings 
     ["<leader>fu"] = { "<cmd>Feed update<CR>", "Update RSS Feeds"},
