@@ -137,16 +137,22 @@ local plugins = {
         opts = {
             backend = "kitty",
             processor = "magick_cli",
+            kitty_method = "unicode-placeholders",
+            tmux_show_only_in_active_window = true,
+            kitty_tmux_write_delay = 10,
+            window_overlap_clear_enabled = false,
+            window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
+            editor_only_render_when_focused = false,
             integrations = {
                 markdown = {
-                enabled = true,
-                clear_in_insert_mode = false,
-                download_remote_images = true,
-                only_render_image_at_cursor = false,
-                filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
+                    enabled = true,
+                    clear_in_insert_mode = false,
+                    download_remote_images = true,
+                    only_render_image_at_cursor = false,
+                    filetypes = { "markdown", "vimwiki", "md" }, -- markdown extensions (ie. quarto) can go here
                 },
                 neorg = {
-                enabled = true,
+                    enabled = true,
                     clear_in_insert_mode = false,
                     download_remote_images = true,
                     only_render_image_at_cursor = false,
@@ -157,7 +163,6 @@ local plugins = {
             max_height = nil,
             max_width_window_percentage = nil,
             max_height_window_percentage = 50,
-            kitty_method = "normal",
             hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif" }
         },
     },
