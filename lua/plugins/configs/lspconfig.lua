@@ -38,10 +38,24 @@ M.capabilities.textDocument.completion.completionItem = {
   },
 }
 
-require("lspconfig").lua_ls.setup {
-  on_attach = M.on_attach,
-  capabilities = M.capabilities,
+-- Global LspAttach autocommand for on_attach behavior
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    local bufnr = args.buf
+    if client then
+      M.on_attach(client, bufnr)
+    end
+  end,
+})
 
+-- Global capabilities for all servers
+vim.lsp.config('*', {
+  capabilities = M.capabilities,
+})
+
+-- lua_ls configuration
+vim.lsp.config('lua_ls', {
   settings = {
     Lua = {
       diagnostics = {
@@ -59,6 +73,8 @@ require("lspconfig").lua_ls.setup {
       },
     },
   },
-}
+})
+
+vim.lsp.enable('lua_ls')
 
 return M
