@@ -148,10 +148,20 @@ M.general = {
     ["<leader>fu"] = { "<cmd>Feed update<CR>", "Update RSS Feeds"},
     ["<leader>fi"] = { "<cmd>Feed index<CR>", "Open RSS Feeds Inbox"},
 
-    -- Inline transclusions (supports ![[path]], ![[!command]], [title](path), [title](!command))
+    -- Inline transclusions (supports ![[path]], ![[!command]], [title](path), [title](!command), Transcription UUID)
     ["<leader>te"] = {
         function()
           local line = vim.api.nvim_get_current_line()
+
+          -- Check for Transcription UUID: <uuid>
+          local uuid = line:match('Transcription UUID:%s*([%x%-]+)')
+          if uuid then
+            local cmd = 'transcriptions view ' .. uuid .. ' -f simple'
+            local output = vim.fn.systemlist(cmd)
+            local row = vim.api.nvim_win_get_cursor(0)[1]
+            vim.api.nvim_buf_set_lines(0, row, row, false, output)
+            return
+          end
 
           -- Check for command transclusion: ![[!command]] or [title](!command)
           local cmd = line:match('!%[%[!(.-)%]%]')
@@ -222,6 +232,15 @@ M.general = {
             vim.keymap.set('n', 'q', ':close<CR>', { buffer = buf, silent = true })
           end
 
+          -- Check for Transcription UUID: <uuid>
+          local uuid = line:match('Transcription UUID:%s*([%x%-]+)')
+          if uuid then
+            local cmd = 'transcriptions view ' .. uuid .. ' -f simple'
+            local output = vim.fn.systemlist(cmd)
+            open_float(output)
+            return
+          end
+
           -- Check for command transclusion: ![[!command]] or [title](!command)
           local cmd = line:match('!%[%[!(.-)%]%]')
           if not cmd then
@@ -257,12 +276,24 @@ M.general = {
         "vimban: regenerate section",
     },
 
-    -- Go to link under cursor (supports ![[path]], ![[!command]], [title](path), [title](!command))
+    -- Go to link under cursor (supports ![[path]], ![[!command]], [title](path), [title](!command), Transcription UUID)
     ["<leader>tg"] = {
         function()
             local line = vim.fn.getline('.')
             local col = vim.fn.col('.')
             local notes_dir = vim.fn.expand('~/Documents/notes/')
+
+            -- Check for Transcription UUID: <uuid>
+            local uuid = line:match('Transcription UUID:%s*([%x%-]+)')
+            if uuid then
+                -- Execute transcriptions command, save to temp file, open in buffer
+                local cmd = 'transcriptions view ' .. uuid .. ' -f simple'
+                local output = vim.fn.system(cmd)
+                local tmpfile = vim.fn.tempname() .. '.md'
+                vim.fn.writefile(vim.split(output, '\n'), tmpfile)
+                vim.cmd('edit ' .. tmpfile)
+                return
+            end
 
             -- Check command transclusion links: ![[!command]]
             for s, cmd, e in line:gmatch('()!%[%[!([^%]]+)%]%]()') do
