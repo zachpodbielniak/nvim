@@ -146,3 +146,9 @@ end, {})
 vim.schedule(function()
   require('custom.vimban').setup()
 end)
+
+-------------------------------------- shell setup ------------------------------------------
+-- Setup shell module for running commands and capturing output
+vim.schedule(function()
+  require('custom.shell').setup()
+end)

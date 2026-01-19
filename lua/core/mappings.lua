@@ -444,6 +444,48 @@ M.general = {
         "vimban: show help",
     },
 
+    -- Shell: run commands and capture output
+    ["<leader>ss"] = {
+        function() require('custom.shell').prompt_command('split') end,
+        "Shell: run command (split)",
+    },
+    ["<leader>sv"] = {
+        function() require('custom.shell').prompt_command('vsplit') end,
+        "Shell: run command (vsplit)",
+    },
+    ["<leader>sf"] = {
+        function() require('custom.shell').prompt_command('float') end,
+        "Shell: run command (float)",
+    },
+    ["<leader>st"] = {
+        function() require('custom.shell').prompt_command('tab') end,
+        "Shell: run command (tab)",
+    },
+    ["<leader>sb"] = {
+        function() require('custom.shell').prompt_command('buffer') end,
+        "Shell: run command (buffer)",
+    },
+    ["<leader>sh"] = {
+        function() require('custom.shell').fzf_history() end,
+        "Shell: history picker",
+    },
+    ["<leader>sr"] = {
+        function() require('custom.shell').rerun() end,
+        "Shell: re-run last command",
+    },
+    ["<leader>sR"] = {
+        function() require('custom.shell').refresh_buffer() end,
+        "Shell: refresh buffer",
+    },
+    ["<leader>s|"] = {
+        function() require('custom.shell').prompt_filter() end,
+        "Shell: filter output",
+    },
+    ["<leader>s?"] = {
+        function() require('custom.shell').show_help() end,
+        "Shell: show help",
+    },
+
   },
 
   t = {
