@@ -262,39 +262,88 @@ end
 -- Ticket List / FZF Functions
 -- ============================================================================
 
--- FZF ticket picker with enhanced actions
+-- Telescope ticket picker with enhanced actions
 function M.fzf_tickets(filter)
     filter = filter or '--mine'
-    local fzf_cmd = string.format(
-        'vimban --no-color -f plain list %s --no-header | fzf --preview "vimban --no-color -f md show {1}" ' ..
-        '--header "enter=open, ctrl-m=move, ctrl-c=comment, ctrl-e=edit" ' ..
-        '--expect=ctrl-m,ctrl-c,ctrl-e',
-        filter
-    )
-    local result = vim.fn.system(fzf_cmd)
-    local lines = vim.split(vim.fn.trim(result), '\n')
+    local pickers = require('telescope.pickers')
+    local finders = require('telescope.finders')
+    local conf = require('telescope.config').values
+    local actions = require('telescope.actions')
+    local action_state = require('telescope.actions.state')
+    local previewers = require('telescope.previewers')
 
-    if #lines < 1 then return end
+    -- Get ticket list from vimban
+    local cmd = string.format('vimban --no-color -f plain list %s --no-header', filter)
+    local output = vim.fn.systemlist(cmd)
+    if #output == 0 then
+        vim.notify('No tickets found', vim.log.levels.INFO)
+        return
+    end
 
-    local key = lines[1]
-    local selection = #lines > 1 and lines[2] or lines[1]
-    local id = selection:match('^%S+')
-
-    if not id or id == '' then return end
-
-    if key == 'ctrl-m' then
-        M.move_status(id)
-    elseif key == 'ctrl-c' then
-        M.add_comment(id)
-    elseif key == 'ctrl-e' then
-        M.edit_ticket(id)
-    else
-        -- Default: open ticket file
-        local path = M.get_ticket_filepath(id)
-        if path and path ~= '' then
-            vim.cmd('edit ' .. M.config.notes_dir .. path)
+    -- Parse tickets into table
+    local tickets = {}
+    for _, line in ipairs(output) do
+        local id = line:match('^%S+')
+        if id then
+            table.insert(tickets, { id = id, line = line })
         end
     end
+
+    pickers.new({}, {
+        prompt_title = 'Vimban Tickets (' .. filter .. ')',
+        finder = finders.new_table({
+            results = tickets,
+            entry_maker = function(entry)
+                return {
+                    value = entry,
+                    display = entry.line,
+                    ordinal = entry.line,
+                }
+            end,
+        }),
+        sorter = conf.generic_sorter({}),
+        previewer = previewers.new_buffer_previewer({
+            title = 'Ticket Preview',
+            define_preview = function(self, entry)
+                local preview_cmd = 'vimban --no-color -f md show ' .. entry.value.id
+                local preview = vim.fn.systemlist(preview_cmd)
+                vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, preview)
+                vim.api.nvim_set_option_value('filetype', 'markdown', { buf = self.state.bufnr })
+            end,
+        }),
+        attach_mappings = function(prompt_bufnr, map)
+            -- Default action: open ticket file
+            actions.select_default:replace(function()
+                actions.close(prompt_bufnr)
+                local selection = action_state.get_selected_entry()
+                if selection then
+                    local path = M.get_ticket_filepath(selection.value.id)
+                    if path and path ~= '' then
+                        vim.cmd('edit ' .. M.config.notes_dir .. path)
+                    end
+                end
+            end)
+            -- ctrl-m: move status
+            map('i', '<C-m>', function()
+                local selection = action_state.get_selected_entry()
+                actions.close(prompt_bufnr)
+                if selection then M.move_status(selection.value.id) end
+            end)
+            -- ctrl-c: add comment
+            map('i', '<C-x>', function()
+                local selection = action_state.get_selected_entry()
+                actions.close(prompt_bufnr)
+                if selection then M.add_comment(selection.value.id) end
+            end)
+            -- ctrl-e: edit ticket
+            map('i', '<C-e>', function()
+                local selection = action_state.get_selected_entry()
+                actions.close(prompt_bufnr)
+                if selection then M.edit_ticket(selection.value.id) end
+            end)
+            return true
+        end,
+    }):find()
 end
 
 -- List with filter menu
@@ -571,35 +620,217 @@ end
 
 -- People dashboard picker
 function M.people_dashboard()
-    local result = vim.fn.system('vimban --no-color -f plain people list --no-header | fzf --preview "vimban --no-color -f md people show {1}"')
-    local person = vim.fn.trim(result)
-    if person and person ~= '' then
-        local content = vim.fn.systemlist('vimban -f md dashboard person --person "' .. person .. '"')
-        M.open_float(content, {
-            title = 'Person: ' .. person,
-            width = 0.85,
-            height = 0.85,
-        })
+    local pickers = require('telescope.pickers')
+    local finders = require('telescope.finders')
+    local conf = require('telescope.config').values
+    local actions = require('telescope.actions')
+    local action_state = require('telescope.actions.state')
+    local previewers = require('telescope.previewers')
+
+    -- Get people list
+    local output = vim.fn.systemlist('vimban --no-color -f plain people list --no-header')
+    if #output == 0 then
+        vim.notify('No people found', vim.log.levels.INFO)
+        return
     end
+
+    local people = {}
+    for _, line in ipairs(output) do
+        local name = line:match('^%S+')
+        if name then
+            table.insert(people, { name = name, line = line })
+        end
+    end
+
+    pickers.new({}, {
+        prompt_title = 'People Dashboard',
+        finder = finders.new_table({
+            results = people,
+            entry_maker = function(entry)
+                return {
+                    value = entry,
+                    display = entry.line,
+                    ordinal = entry.line,
+                }
+            end,
+        }),
+        sorter = conf.generic_sorter({}),
+        previewer = previewers.new_buffer_previewer({
+            title = 'Person Preview',
+            define_preview = function(self, entry)
+                local preview_cmd = 'vimban --no-color -f md people show ' .. entry.value.name
+                local preview = vim.fn.systemlist(preview_cmd)
+                vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, preview)
+                vim.api.nvim_set_option_value('filetype', 'markdown', { buf = self.state.bufnr })
+            end,
+        }),
+        attach_mappings = function(prompt_bufnr, _)
+            actions.select_default:replace(function()
+                actions.close(prompt_bufnr)
+                local selection = action_state.get_selected_entry()
+                if selection then
+                    local content = vim.fn.systemlist('vimban -f md dashboard person --person "' .. selection.value.name .. '"')
+                    M.open_float(content, {
+                        title = 'Person: ' .. selection.value.name,
+                        width = 0.85,
+                        height = 0.85,
+                    })
+                end
+            end)
+            return true
+        end,
+    }):find()
 end
 
 -- ============================================================================
 -- Link / Navigation Functions
 -- ============================================================================
 
--- Insert transclusion link at cursor
+-- Insert transclusion link at cursor (Telescope picker)
 function M.insert_link()
-    local fzf_cmd = 'vimban --no-color -f plain list --no-header | fzf --preview "vimban --no-color -f md show {1}"'
-    local result = vim.fn.system(fzf_cmd)
-    local id = vim.fn.trim(result):match('^%S+')
+    local pickers = require('telescope.pickers')
+    local finders = require('telescope.finders')
+    local conf = require('telescope.config').values
+    local actions = require('telescope.actions')
+    local action_state = require('telescope.actions.state')
+    local previewers = require('telescope.previewers')
 
-    if id and id ~= '' then
-        local path = M.get_ticket_filepath(id)
-        if path and path ~= '' then
-            local link = '![[' .. path .. ']]'
-            vim.api.nvim_put({ link }, 'c', true, true)
+    -- Get all tickets
+    local output = vim.fn.systemlist('vimban --no-color -f plain list --no-header')
+    if #output == 0 then
+        vim.notify('No tickets found', vim.log.levels.INFO)
+        return
+    end
+
+    local tickets = {}
+    for _, line in ipairs(output) do
+        local id = line:match('^%S+')
+        if id then
+            table.insert(tickets, { id = id, line = line })
         end
     end
+
+    pickers.new({}, {
+        prompt_title = 'Insert Ticket Link',
+        finder = finders.new_table({
+            results = tickets,
+            entry_maker = function(entry)
+                return {
+                    value = entry,
+                    display = entry.line,
+                    ordinal = entry.line,
+                }
+            end,
+        }),
+        sorter = conf.generic_sorter({}),
+        previewer = previewers.new_buffer_previewer({
+            title = 'Ticket Preview',
+            define_preview = function(self, entry)
+                local preview_cmd = 'vimban --no-color -f md show ' .. entry.value.id
+                local preview = vim.fn.systemlist(preview_cmd)
+                vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, preview)
+                vim.api.nvim_set_option_value('filetype', 'markdown', { buf = self.state.bufnr })
+            end,
+        }),
+        attach_mappings = function(prompt_bufnr, _)
+            actions.select_default:replace(function()
+                actions.close(prompt_bufnr)
+                local selection = action_state.get_selected_entry()
+                if selection then
+                    local path = M.get_ticket_filepath(selection.value.id)
+                    if path and path ~= '' then
+                        local link = '![[' .. path .. ']]'
+                        vim.api.nvim_put({ link }, 'c', true, true)
+                    end
+                end
+            end)
+            return true
+        end,
+    }):find()
+end
+
+-- Insert transclusion link to any PARA note (Telescope picker)
+function M.insert_para_link()
+    local pickers = require('telescope.pickers')
+    local finders = require('telescope.finders')
+    local conf = require('telescope.config').values
+    local actions = require('telescope.actions')
+    local action_state = require('telescope.actions.state')
+    local previewers = require('telescope.previewers')
+
+    local notes_dir = M.config.notes_dir
+    local para_dirs = {
+        '00_inbox',
+        '01_projects',
+        '02_areas',
+        '03_resources',
+        '04_archives',
+    }
+
+    -- Build find command for all PARA directories
+    local find_paths = {}
+    for _, dir in ipairs(para_dirs) do
+        table.insert(find_paths, notes_dir .. dir)
+    end
+
+    -- Use fd or find to get markdown files
+    local cmd = 'fd -e md -e norg . ' .. table.concat(find_paths, ' ') .. ' 2>/dev/null'
+    local output = vim.fn.systemlist(cmd)
+
+    -- Fallback to find if fd not available
+    if #output == 0 or vim.v.shell_error ~= 0 then
+        cmd = 'find ' .. table.concat(find_paths, ' ') .. ' -type f \\( -name "*.md" -o -name "*.norg" \\) 2>/dev/null'
+        output = vim.fn.systemlist(cmd)
+    end
+
+    if #output == 0 then
+        vim.notify('No notes found in PARA directories', vim.log.levels.INFO)
+        return
+    end
+
+    -- Convert absolute paths to relative paths from notes_dir
+    local files = {}
+    for _, filepath in ipairs(output) do
+        local relative = filepath:gsub('^' .. vim.pesc(notes_dir), '')
+        table.insert(files, { path = relative, fullpath = filepath })
+    end
+
+    pickers.new({}, {
+        prompt_title = 'Insert Transclusion Link (PARA Notes)',
+        finder = finders.new_table({
+            results = files,
+            entry_maker = function(entry)
+                return {
+                    value = entry,
+                    display = entry.path,
+                    ordinal = entry.path,
+                }
+            end,
+        }),
+        sorter = conf.generic_sorter({}),
+        previewer = previewers.new_buffer_previewer({
+            title = 'Note Preview',
+            define_preview = function(self, entry)
+                local preview = vim.fn.readfile(entry.value.fullpath)
+                vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, preview)
+                -- Set filetype based on extension
+                local ext = entry.value.fullpath:match('%.([^%.]+)$')
+                local ft = ext == 'norg' and 'norg' or 'markdown'
+                vim.api.nvim_set_option_value('filetype', ft, { buf = self.state.bufnr })
+            end,
+        }),
+        attach_mappings = function(prompt_bufnr, _)
+            actions.select_default:replace(function()
+                actions.close(prompt_bufnr)
+                local selection = action_state.get_selected_entry()
+                if selection then
+                    local link = '![[' .. selection.value.path .. ']]'
+                    vim.api.nvim_put({ link }, 'c', true, true)
+                end
+            end)
+            return true
+        end,
+    }):find()
 end
 
 -- Show ticket under cursor in float

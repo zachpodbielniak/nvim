@@ -95,6 +95,12 @@ M.general = {
 
     ["<leader>tt"] = { "<cmd>terminal<CR><cmd>SendHere<CR>", "Open Terminal"},
 
+    -- Insert transclusion link to PARA notes
+    ["<leader>ti"] = {
+        function() require('custom.vimban').insert_para_link() end,
+        "Insert transclusion link (PARA notes)",
+    },
+
     -- Run transclusion silently (show errors in tab) or run line
     ["<leader>tr"] = {
         function()
