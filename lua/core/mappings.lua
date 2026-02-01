@@ -761,6 +761,12 @@ M.telescope = {
     ["<leader>th"] = { "<cmd> Telescope themes <CR>", "Nvchad themes" },
 
     ["<leader>ma"] = { "<cmd> Telescope marks <CR>", "telescope bookmarks" },
+
+    -- Emoji picker
+    ["<leader>fe"] = {
+        function() require('custom.telescope_emoji').pick_emoji() end,
+        "Find Emoji",
+    },
   },
 }
 
