@@ -43,67 +43,6 @@ local plugins = {
         end,
     },
     {
-        "vhyrro/luarocks.nvim",
-        priority = 1000, -- Very high priority is required, luarocks.nvim should run as the first plugin in your config.
-        config = true,
-        lazy = false,
-        opts = {
-            rocks = { "lua-utils", "magick" }
-        },
-        dependencies = {
-            "MunifTanjim/nui.nvim",
-            "nvim-neotest/nvim-nio",
-            "nvim-neorg/lua-utils.nvim",
-            "nvim-lua/plenary.nvim",
-            "pysan3/pathlib.nvim"
-        }
-    },
-    {
-        "nvim-neorg/neorg",
-        lazy = false, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
-        version = "*", -- Pin Neorg to the latest stable release
-        build = ":Neorg sync-parsers",
-        config = function()
-            require("neorg").setup({
-                load = {
-                    ["core.defaults"] = {}, -- Loads default behavior 
-                    ["core.concealer"] = {}, -- Adds pretty icons to documents
-                    ["core.summary"] = {
-                        config = {
-                            strategy = "by_path"
-                        }
-                    },
-                    ["core.dirman"] = { -- Manages Neorg WorkspaceSymbol
-                        config = {
-                            workspaces = {
-                                personal = "~/Documents/notes"
-                            },
-                            default_workspace = "personal",
-                            index = "00_index.norg",
-                        }
-                    },
-                    ["core.autocommands"] = {},
-                    ["core.highlights"] = {},
-                    ["core.integrations.treesitter"] = {},
-                    ["core.presenter"] = {
-                        config = {
-                            zen_mode = "truezen"
-                        }
-                    },
-                    ["core.export"] = {},
-                    ["external.pandoc"] = {},
-                    ["external.jupyter"] = {}
-                }
-            })
-        end,
-        dependencies = { "luarocks.nvim", "nvim-treesitter", "tamton-aquib/neorg-jupyter" }
-    },
-    {
-        "champignoom/norg-pandoc",
-        branch = "neorg-plugin",
-        config = true,
-    },
-    {
         "NoahTheDuke/vim-just",
         ft = { "just" },
     },
@@ -166,9 +105,6 @@ local plugins = {
     --         hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif" }
     --     },
     -- },
-    {
-        "Pocco81/true-zen.nvim"
-    },
     {
         "itchyny/calendar.vim",
         lazy = false,
