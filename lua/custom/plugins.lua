@@ -325,6 +325,21 @@ local plugins = {
         end,
         ft = { "markdown" },
     },
+    {
+        "https://gitlab.com/zachpodbielniak/podomation-nvim.git",
+        -- "git@gitlab.com:zachpodbielniak/podomation-nvim.git",
+        lazy = true,
+        ft = "pod",
+        config = function()
+            require("podomation").setup({
+                cmd = { 
+                    "/var/home/zach/source/projects/podomation/build/debug/podomation-language-server",
+                    "--modules-path",
+                    "/var/home/zach/source/projects/podomation/build/debug/modules"
+                }
+            })
+        end,
+    }
 }
 
 return plugins
