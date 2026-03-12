@@ -339,6 +339,13 @@ local plugins = {
                 }
             })
         end,
+    },
+    {
+        "https://gitlab.com/zachpodbielniak/ls-nvim.git",
+        lazy = false,
+        config = function()
+            require("ls-nvim").setup()
+        end,
     }
 }
 
