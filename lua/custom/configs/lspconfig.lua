@@ -29,7 +29,8 @@ vim.lsp.config('bashls', {
 -- docker / containerfile
 vim.lsp.config('dockerls', {
     filetypes = { "dockerfile", "containerfile" },
-    cmd = { "docker-langserver", "--stdio" },
+    -- cmd = { "docker-langserver", "--stdio" },
+    cmd = { "docker-language-server", "--stdio" },
     single_file_support = true,
 })
 

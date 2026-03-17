@@ -341,6 +341,19 @@ local plugins = {
         end,
     },
     {
+        "https://gitlab.com/zachpodbielniak/bacon-nvim.git",
+        lazy = true,
+        ft = "strip",
+        config = function()
+            require("bacon").setup({
+                cmd = {
+                    "/var/home/zach/source/projects/bacon/build/debug/bacon-language-server"
+                },
+                keymaps = false
+            })
+        end,
+    },
+    {
         "https://gitlab.com/zachpodbielniak/ls-nvim.git",
         lazy = false,
         config = function()
