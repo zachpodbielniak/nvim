@@ -43,7 +43,8 @@ vim.lsp.config('pyright', {
 
 -- c
 vim.lsp.config('clangd', {
-    filetypes = { "c", "cpp", "cc", "objc", "objcpp", "cuda", "proto" },
+    -- filetypes = { "c", "cpp", "cc", "objc", "objcpp", "cuda", "proto" },
+    filetypes = { "cpp", "cc", "objc", "objcpp", "cuda", "proto" },
     cmd = { "clangd" },
     single_file_support = true,
 })

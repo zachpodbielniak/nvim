@@ -354,6 +354,19 @@ local plugins = {
         end,
     },
     {
+        "https://gitlab.com/zachpodbielniak/crispy-nvim.git",
+        lazy = true,
+        ft = "c",
+        config = function()
+            require("crispy").setup({
+                cmd = {
+                    "/var/home/zach/source/projects/crispy/build/debug/crispy-language-server"
+                },
+                keymaps = false
+            })
+        end,
+    },
+    {
         "https://gitlab.com/zachpodbielniak/ls-nvim.git",
         lazy = false,
         config = function()
