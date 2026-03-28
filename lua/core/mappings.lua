@@ -84,16 +84,11 @@ M.general = {
     ["<leader>cD"] = { "<cmd>Calendar -view=days<CR>", "Calendar (Days)"},
     ["<leader>cy"] = { "<cmd>Calendar -view=year<CR>", "Calendar (Year)"},
 
-    -- Parrot running 
-    ["<leader>an"] = { "<cmd>PrtChatNew<CR>", "New AI Chat"},
-    ["<leader>at"] = { "<cmd>PrtChatToggle<CR>", "Toggle AI Chat"},
-    ["<leader>ar"] = { "<cmd>PrtChatRespond<CR>", "AI Chat Respond"},
-    ["<leader>as"] = { "<cmd>PrtChatStop<CR>", "AI Chat Stop Responding"},
-    ["<leader>af"] = { "<cmd>PrtChatFinder<CR>", "AI Chat Find"},
-    ["<leader>am"] = { "<cmd>PrtModel<CR>", "AI Model Selector"},
-    ["<leader>ap"] = { "<cmd>PrtProvider<CR>", "AI Provider Selector"},
-
+    -- Terminal
     ["<leader>tt"] = { "<cmd>terminal<CR><cmd>SendHere<CR>", "Open Terminal"},
+
+    -- ls-nvim
+    ["<leader>tl"] = { "<cmd>LsNvim<CR>", "ls-nvim"},
 
     -- Insert transclusion link to PARA notes
     ["<leader>ti"] = {
