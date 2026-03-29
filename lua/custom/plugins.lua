@@ -385,6 +385,13 @@ local plugins = {
                 confirm_delete = true,
             })
         end,
+    },
+    {
+        "https://git.podbielniak.com/zachpodbielniak/gitctl-nvim.git",
+        lazy = false,
+        config = function()
+            require("gitctl-nvim").setup()
+        end,
     }
 }
 
