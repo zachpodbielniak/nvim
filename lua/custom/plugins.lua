@@ -326,7 +326,7 @@ local plugins = {
         ft = { "markdown" },
     },
     {
-        "https://gitlab.com/zachpodbielniak/podomation-nvim.git",
+        "https://git.podbielniak.com/zachpodbielniak/podomation-nvim.git",
         -- "git@gitlab.com:zachpodbielniak/podomation-nvim.git",
         lazy = true,
         ft = "pod",
@@ -341,7 +341,7 @@ local plugins = {
         end,
     },
     {
-        "https://gitlab.com/zachpodbielniak/bacon-nvim.git",
+        "https://git.podbielniak.com/zachpodbielniak/bacon-nvim.git",
         lazy = true,
         ft = "strip",
         config = function()
@@ -354,7 +354,7 @@ local plugins = {
         end,
     },
     {
-        "https://gitlab.com/zachpodbielniak/crispy-nvim.git",
+        "https://git.podbielniak.com/zachpodbielniak/crispy-nvim.git",
         lazy = true,
         ft = "c",
         config = function()
@@ -367,7 +367,7 @@ local plugins = {
         end,
     },
     {
-        "https://gitlab.com/zachpodbielniak/ls-nvim.git",
+        "https://git.podbielniak.com/zachpodbielniak/ls-nvim.git",
         lazy = false,
         config = function()
             require("ls-nvim").setup()
