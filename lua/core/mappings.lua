@@ -91,6 +91,10 @@ M.general = {
     ["<leader>tl"] = { "<cmd>LsNvim<CR>", "ls-nvim"},
     ["<leader>tL"] = { "<cmd>LsNvimRename<CR>", "ls-nvim rename"},
 
+    -- email-nvim
+    ["<leader>tE"] = { "<cmd>Email<CR>", "email-nvim"},
+    ["<leader>tC"] = { "<cmd>EmailCompose<CR>", "email-nvim compose"},
+
     -- Insert transclusion link to PARA notes
     ["<leader>ti"] = {
         function() require('custom.vimban').insert_para_link() end,

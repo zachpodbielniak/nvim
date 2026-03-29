@@ -372,6 +372,19 @@ local plugins = {
         config = function()
             require("ls-nvim").setup()
         end,
+    },
+    {
+        "https://git.podbielniak.com/zachpodbielniak/email-nvim.git",
+        lazy = false,
+        config = function()
+            require("email-nvim").setup({
+                from = "zach@podbielniak.com",
+                signature = "--\nZach",
+                inbox_limit = 100,
+                confirm_send = true,
+                confirm_delete = true,
+            })
+        end,
     }
 }
 
