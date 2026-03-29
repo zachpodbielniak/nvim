@@ -89,6 +89,7 @@ M.general = {
 
     -- ls-nvim
     ["<leader>tl"] = { "<cmd>LsNvim<CR>", "ls-nvim"},
+    ["<leader>tL"] = { "<cmd>LsNvimRename<CR>", "ls-nvim rename"},
 
     -- Insert transclusion link to PARA notes
     ["<leader>ti"] = {
