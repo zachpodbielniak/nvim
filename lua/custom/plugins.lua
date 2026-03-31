@@ -392,7 +392,28 @@ local plugins = {
         config = function()
             require("gitctl-nvim").setup()
         end,
-    }
+    },
+    {
+        "https://git.podbielniak.com/zachpodbielniak/possessions-nvim.git",
+        lazy = false,
+        config = function()
+            require("possessions-nvim").setup()
+        end,
+    },
+    {
+        "https://git.podbielniak.com/zachpodbielniak/vimban-nvim.git",
+        lazy = false,
+        config = function()
+            require("vimban-nvim").setup()
+        end,
+    },
+    {
+        "https://git.podbielniak.com/zachpodbielniak/matrix-nvim.git",
+        lazy = false,
+        config = function()
+            require("matrix-nvim").setup()
+        end,
+    },
 }
 
 return plugins
